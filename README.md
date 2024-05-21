@@ -1,16 +1,61 @@
-# app_belibeli
+<h1 align="center">Ecommerce BeliBeli (Mobile)</h1>
 
-A new Flutter project.
+<p align="center">
+  <img alt="Static Badge" src="https://img.shields.io/badge/Flutter-3.19.x-blue">
+  <img alt="Static Badge" src="https://img.shields.io/badge/Dart-3.3.x-blue">
+  <img alt="Static Badge" src="https://img.shields.io/badge/Ecommerce-yellow">
+</p>
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Description
 
-A few resources to get you started if this is your first Flutter project:
+An e-commerce project to sell products online.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository
+
+```bash
+git clone https://github.com/RamirezPineda/mobile_belibeli.git
+```
+
+2. Navigate to the application directory:
+
+```bash
+cd mobile_belibeli
+```
+3. Install the project dependencies:
+
+```bash
+flutter pub get
+```
+
+## Configuration
+
+Rename the .env.example file to .env and set the environment variables
+
+```bash
+# before
+|--src
+|--lib
+|--.env.example
+...
+...
+...
+|--pubspec.yaml
+
+# after
+|--src
+|--lib
+|--.env
+...
+...
+...
+|--pubspec.yaml
+```
+
+## Running the app
+
+```bash
+flutter run
+```
