@@ -1,11 +1,10 @@
-import 'package:app_belibeli/utils/utils.dart';
 import 'package:dio/dio.dart';
 
-// ignore: constant_identifier_names
-const PATH_PREFIX = '/api/v1';
+import 'package:app_belibeli/constants/constants.dart';
+import 'package:app_belibeli/utils/utils.dart';
 
 class HttClient {
-  static const String _baseUrl = 'http://192.168.43.226:4000$PATH_PREFIX';
+  static final String _baseUrl = '${Environment.apiUrl}/api/v1';
 
   static final dio = Dio(BaseOptions(
     baseUrl: _baseUrl,
@@ -28,6 +27,10 @@ class HttClient {
       String endpoint, Object? data) async {
     try {
       final response = await dio.post(endpoint, data: data);
+      final headerAuthorization = response.headers['authorization'];
+      if (headerAuthorization != null) {
+        response.data[LocalStorage.token] = _getToken(headerAuthorization);
+      }
       return response.data;
     } on DioException catch (error) {
       return _handleError(error);
@@ -62,13 +65,20 @@ class HttClient {
 
   static Map<String, dynamic> _handleError(Object error) {
     if (error is DioException && error.response != null) {
-      var responseError = ResponseError.fromMap(error.response?.data);
-      return responseError.toMap();
+      return error.response?.data;
     }
-    return ResponseError(
-      messages: ['Internal Server Error'],
-      statusCode: 500,
-      error: 'Internal Server Error',
-    ).toMap();
+    return {
+      ResponseError.messages: ['Internal Server Error'],
+      ResponseError.statusCode: 500,
+      ResponseError.error: 'Internal Server Error'
+    };
+  }
+
+  static String _getToken(List<String>? headerAuthorization) {
+    final bearerAndToken = headerAuthorization?[0].split(' ');
+    if (bearerAndToken != null && bearerAndToken.length > 1) {
+      return bearerAndToken[1];
+    }
+    return '';
   }
 }
