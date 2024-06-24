@@ -44,4 +44,28 @@ class TValidator {
 
     return null;
   }
+
+  static String? validateConfirmPassword(String? value, String password) {
+    if (value != password) {
+      return 'Passwords do not match';
+    }
+
+    return null;
+  }
+
+  static String? validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Name is required';
+    }
+
+    if (value.length < 3) {
+      return 'Name must be greater than or equal to 3 characters.';
+    }
+
+    if (value.length > 50) {
+      return 'Name must be less than or equal to 50 characters.';
+    }
+
+    return null;
+  }
 }
