@@ -1,22 +1,26 @@
-import 'package:app_belibeli/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
 
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:app_belibeli/routes/app_router.dart';
 import 'package:app_belibeli/providers/providers.dart';
 import 'package:app_belibeli/services/services.dart';
 import 'package:app_belibeli/ui/ui.dart';
 import 'package:app_belibeli/utils/utils.dart';
+import 'package:app_belibeli/widgets/widgets.dart';
 
 class LoginForm extends StatelessWidget {
   LoginForm({super.key});
 
   final authService = AuthService();
 
-  Future<void> login(LoginFormController loginForm) async {
-    if (!loginForm.isValidForm()) return;
+  Future<Map<String, dynamic>> login(LoginFormController loginForm) async {
     loginForm.isLoading = true;
-    await authService.login(loginForm.auth);
+    final data = await authService.login(loginForm.auth);
     loginForm.isLoading = false;
+    return data;
   }
 
   @override
@@ -52,12 +56,16 @@ class LoginForm extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: TextFormField(
               style: const TextStyle(fontWeight: FontWeight.w500),
-              obscureText: true,
+              obscureText: !loginForm.showPassword,
               keyboardType: TextInputType.text,
               decoration: inputDecoration(
                 hintText: '********',
                 labelText: 'Password',
                 disabled: loginForm.isLoading,
+                suffixIcon: !loginForm.showPassword
+                    ? CupertinoIcons.eye_fill
+                    : CupertinoIcons.eye_slash_fill,
+                onTapSuffixIcon: () => loginForm.toggleShowPassword(),
               ),
               onChanged: (value) => loginForm.auth.password = value,
               validator: (value) => TValidator.validatePassword(value),
@@ -71,20 +79,33 @@ class LoginForm extends StatelessWidget {
           // Sign In Button
           MaterialButton(
             elevation: 0,
-            disabledColor: Colors.blue[400],
+            disabledColor: Colors.grey,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            color: Colors.blue[600],
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            color: const Color(0xff1d242d),
             onPressed: loginForm.isLoading
                 ? null
-                : () {
+                : () async {
                     FocusScope.of(context).unfocus();
-                    login(loginForm);
+                    if (!loginForm.isValidForm()) return;
+
+                    login(loginForm).then((data) {
+                      if (data.containsKey(ResponseError.messages)) {
+                        _showDialogError(context, data['messages'][0]);
+                      } else {
+                        final categoryProvider =
+                            context.read<CategoryProvider>();
+                        categoryProvider.getAllCategories();
+                        context.pushReplacement(Routes.root);
+                      }
+                    }).catchError((onError) {
+                      _showDialogError(context, 'Error!');
+                    });
                   },
             child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: loginForm.isLoading ? 151 : 140,
-                vertical: loginForm.isLoading ? 14.5 : 14,
+                vertical: loginForm.isLoading ? 16.5 : 16,
               ),
               child: _textLogin(loginForm.isLoading),
             ),
@@ -105,5 +126,30 @@ class LoginForm extends StatelessWidget {
               fontSize: 15,
             ),
           );
+  }
+
+  Future<dynamic> _showDialogError(BuildContext context, String message) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0)),
+            title: const Text('Error', style: TextStyle(color: Colors.red)),
+            content: Row(
+              children: [
+                const Icon(Icons.error, color: Colors.red),
+                const SizedBox(width: 5),
+                Text(message)
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Accept'),
+              ),
+            ],
+          );
+        });
   }
 }
