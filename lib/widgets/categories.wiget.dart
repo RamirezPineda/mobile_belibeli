@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:app_belibeli/models/models.dart';
 
 class Categories extends StatelessWidget {
-  const Categories({super.key});
-
-  static List categoriesList = [
-    ['Category', true],
-    ['T-Shirts', false],
-    ['Jackets', false],
-    ['Shirts', false],
-    ['Jeans', false],
-    ['Bags', false],
-    ['Caps', false],
-  ];
+  final List<Category> categories;
+  const Categories({super.key, required this.categories});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +11,7 @@ class Categories extends StatelessWidget {
       height: 70,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: categoriesList.length,
+        itemCount: categories.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {},
@@ -34,7 +26,7 @@ class Categories extends StatelessWidget {
                       color: Colors.grey.shade300,
                       padding: const EdgeInsets.all(2),
                       child: Image.network(
-                        'https://res.cloudinary.com/dwn7fonh6/image/upload/v1715909768/portfolio/ecommerce/categories/tshirt_hhtlsj.png',
+                        categories[index].imageUrl,
                         fit: BoxFit.cover,
                         height: 45,
                         width: 45,
@@ -44,13 +36,14 @@ class Categories extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    categoriesList[index][0],
+                    categories[index].name,
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
-                      color: categoriesList[index][1]
-                          ? Colors.grey.shade900
-                          : Colors.grey.shade600,
+                      color: Colors.grey.shade500,
+                      //  color: categories[index].id
+                      //     ? Colors.grey.shade900
+                      //     : Colors.grey.shade600,
                     ),
                   ),
                 ],
