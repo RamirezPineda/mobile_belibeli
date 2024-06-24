@@ -7,11 +7,15 @@ InputDecoration inputDecoration({
   required String labelText,
   IconData? suffixIcon,
   bool disabled = false,
+  Function()? onTapSuffixIcon,
 }) {
   return InputDecoration(
     hintText: hintText,
     labelText: labelText,
     alignLabelWithHint: true,
+    suffixIcon: suffixIcon != null
+        ? InkWell(onTap: onTapSuffixIcon, child: Icon(suffixIcon))
+        : null,
     hintStyle: TextStyle(color: Colors.grey[500]),
     labelStyle: TextStyle(color: Colors.grey[500]),
     // suffixIcon: Icon(suffixIcon, color: Colors.grey[500]),
