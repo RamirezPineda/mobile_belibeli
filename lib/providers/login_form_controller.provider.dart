@@ -6,6 +6,7 @@ class LoginFormController extends ChangeNotifier {
 
   late Auth auth;
   bool _isLoading = false;
+  bool _showPassword = false;
 
   LoginFormController() {
     auth = Auth(email: 'ramirezpineda@gmail.com', password: '12345678');
@@ -14,9 +15,15 @@ class LoginFormController extends ChangeNotifier {
   bool isValidForm() => formKey.currentState?.validate() ?? false;
 
   bool get isLoading => _isLoading;
+  bool get showPassword => _showPassword;
 
   set isLoading(bool value) {
     _isLoading = value;
+    notifyListeners();
+  }
+
+  void toggleShowPassword() {
+    _showPassword = !_showPassword;
     notifyListeners();
   }
 }
