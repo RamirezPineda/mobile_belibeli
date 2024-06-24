@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
 class ProductScreen extends StatelessWidget {
@@ -22,8 +24,13 @@ class ProductScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                           top: 50.0, left: 15.0, right: 15.0),
                       color: Colors.grey.shade200,
-                      child: Image.network(
-                        'https://res.cloudinary.com/dwn7fonh6/image/upload/v1715909768/portfolio/ecommerce/categories/tshirt_hhtlsj.png',
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            'https://res.cloudinary.com/dwn7fonh6/image/upload/v1715909768/portfolio/ecommerce/categories/tshirt_hhtlsj.png',
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                         fit: BoxFit.cover,
                         height: 320,
                         width: double.infinity,
