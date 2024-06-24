@@ -1,20 +1,28 @@
-import 'package:app_belibeli/screens/login/login.screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_belibeli/screens/screens.dart';
 
 class Routes {
   static const root = '/';
   static const login = '/login';
+  static const product = '/product';
 
   static GoRouter getRoutes() {
-    return GoRouter(routes: [
-      GoRoute(
-        path: Routes.root,
-        builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: Routes.login,
-        builder: (context, state) => const LoginScreen(),
-      ),
-    ]);
+    return GoRouter(
+      initialLocation: login,
+      routes: [
+        GoRoute(
+          path: root,
+          builder: (context, state) => const InitScreen(),
+        ),
+        GoRoute(
+          path: login,
+          builder: (context, state) => const LoginScreen(),
+        ),
+        GoRoute(
+          path: product,
+          builder: (context, state) => const ProductScreen(),
+        ),
+      ],
+    );
   }
 }
