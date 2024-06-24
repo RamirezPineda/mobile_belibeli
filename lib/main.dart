@@ -1,7 +1,10 @@
+import 'package:app_belibeli/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 import 'package:app_belibeli/routes/app_router.dart';
+import 'package:app_belibeli/providers/providers.dart';
 import 'package:app_belibeli/utils/utils.dart';
 
 void main() async {
@@ -12,7 +15,18 @@ void main() async {
 
   await dotenv.load(fileName: '.env');
 
-  runApp(const MyApp());
+  final categoryService = CategoryService();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => CategoryProvider(categoryService),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
