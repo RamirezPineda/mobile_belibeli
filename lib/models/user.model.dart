@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 class User {
-  String id;
+  String? id;
   String name;
   String email;
   String password;
 
   User({
-    required this.id,
+    this.id,
     required this.name,
     required this.email,
     required this.password,
