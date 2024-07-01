@@ -8,6 +8,7 @@ class HttClient {
 
   static final dio = Dio(BaseOptions(
     baseUrl: _baseUrl,
+    headers: {'Authorization': 'Bearer ${UserPreferences.getToken()}'},
     connectTimeout: const Duration(seconds: 60),
     receiveTimeout: const Duration(seconds: 60),
   ));
