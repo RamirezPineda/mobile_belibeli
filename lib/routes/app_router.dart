@@ -19,8 +19,10 @@ class Routes {
           builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
-          path: product,
-          builder: (context, state) => const ProductScreen(),
+          path: '$product/:id',
+          builder: (context, state) => ProductScreen(
+            id: state.pathParameters['id'],
+          ),
         ),
       ],
     );
