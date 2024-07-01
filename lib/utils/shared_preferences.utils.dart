@@ -45,4 +45,9 @@ class UserPreferences {
     _prefs.setString(LocalStorage.email, '');
     _prefs.setString(LocalStorage.name, '');
   }
+
+  static String getToken() {
+    final prefs = UserPreferences();
+    return prefs.token;
+  }
 }
