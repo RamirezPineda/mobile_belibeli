@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:app_belibeli/models/models.dart';
+import 'package:app_belibeli/providers/providers.dart';
 
 class ProductScreen extends StatelessWidget {
-  const ProductScreen({super.key});
+  final String? id;
+  const ProductScreen({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
+    final productFavoriteProvider = context.watch<ProductFavoriteProvider>();
+    final product = productFavoriteProvider.getProductById(id ?? '');
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -17,21 +25,20 @@ class ProductScreen extends StatelessWidget {
             children: [
               // product image
               Hero(
-                tag: '1',
+                tag: product.id,
                 child: Stack(
                   children: [
                     Container(
                       padding: const EdgeInsets.only(
                           top: 50.0, left: 15.0, right: 15.0),
-                      color: Colors.grey.shade200,
+                      // color: Colors.grey.shade200,
                       child: CachedNetworkImage(
-                        imageUrl:
-                            'https://res.cloudinary.com/dwn7fonh6/image/upload/v1715909768/portfolio/ecommerce/categories/tshirt_hhtlsj.png',
+                        imageUrl: product.productImage[0].url,
                         placeholder: (context, url) =>
                             const CircularProgressIndicator(),
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                         height: 320,
                         width: double.infinity,
                       ),
@@ -101,9 +108,9 @@ class ProductScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'T-Shirt for golf game in summer and cold station',
-                      style: TextStyle(
+                    Text(
+                      product.name,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                       ),
@@ -148,16 +155,16 @@ class ProductScreen extends StatelessWidget {
                     // product price
                     Row(
                       children: [
-                        const Text(
-                          '\$150.00',
-                          style: TextStyle(
+                        Text(
+                          '\$${product.price}',
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          '\$120.00',
+                          '\$${product.price}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -187,9 +194,7 @@ class ProductScreen extends StatelessWidget {
                         fontSize: 18,
                       ),
                     ),
-                    const Text(
-                      'lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
-                    ),
+                    Text(product.description),
 
                     const SizedBox(height: 10),
 
@@ -197,7 +202,8 @@ class ProductScreen extends StatelessWidget {
                         '27.3 x 24.8 x 4.9 cm; 180 gr'),
                     const Text(
                         'Date First Available     : ' + 'August 08, 2024'),
-                    const Text('Department                  : ' + 'Mens'),
+                    Text(
+                        'Department                  : ${product.department == Department.MEN ? 'Men' : 'Woman'}'),
                     // Text('Specification                : ' +
                     //     'Moisture Wicking, Stretchy, SPF/UV Protection, Easy Cate'),
                     const SizedBox(height: 30),
@@ -208,11 +214,11 @@ class ProductScreen extends StatelessWidget {
                       elevation: 0,
                       minWidth: double.infinity,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       color: const Color(0xff1d242d),
                       child: const Padding(
-                        padding: EdgeInsets.all(14.0),
+                        padding: EdgeInsets.all(16.0),
                         child: Text(
                           'Add to Bag',
                           style: TextStyle(
