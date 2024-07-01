@@ -16,12 +16,20 @@ void main() async {
   await dotenv.load(fileName: '.env');
 
   final categoryService = CategoryService();
+  final productService = ProductService();
+  final productFavoriteService = ProductFavoriteService();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (context) => CategoryProvider(categoryService),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ProductProvider(productService),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ProductFavoriteProvider(productFavoriteService),
         ),
       ],
       child: const MyApp(),
