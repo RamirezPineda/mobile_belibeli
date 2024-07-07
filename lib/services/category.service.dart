@@ -4,8 +4,8 @@ import 'package:app_belibeli/utils/utils.dart';
 
 class CategoryService {
   Future<List<Category>> getAllCategories() async {
-    Map<String, dynamic> response =
-        await HttClient.get('${Endpoints.categories}?order=asc');
+    Map<String, dynamic> response = await HttClient.get(
+        '${Endpoints.categories}?order=asc&withProducts=true');
     final data = response[ResponseApi.data];
 
     if (data != null) {
