@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:app_belibeli/models/models.dart';
 import 'package:app_belibeli/widgets/widgets.dart';
+import 'package:app_belibeli/utils/utils.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -135,7 +136,11 @@ class ProductCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "\$${product.price}",
+                      "\$${TCalculate.calculatePrice(
+                        price: product.price,
+                        tax: product.tax,
+                        discount: product.discount?.amount,
+                      ).toStringAsFixed(2)}",
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
