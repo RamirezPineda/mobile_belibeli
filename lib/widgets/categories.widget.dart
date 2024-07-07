@@ -4,7 +4,14 @@ import 'package:app_belibeli/models/models.dart';
 
 class Categories extends StatelessWidget {
   final List<Category> categories;
-  const Categories({super.key, required this.categories});
+  final int categorySelected;
+  final void Function(int value) onSelectedCategory;
+  const Categories({
+    super.key,
+    required this.categories,
+    required this.onSelectedCategory,
+    required this.categorySelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +22,7 @@ class Categories extends StatelessWidget {
         itemCount: categories.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {},
+            onTap: () => onSelectedCategory(index),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
@@ -43,10 +50,9 @@ class Categories extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade500,
-                      //  color: categories[index].id
-                      //     ? Colors.grey.shade900
-                      //     : Colors.grey.shade600,
+                      color: categorySelected == index
+                          ? Colors.grey.shade900
+                          : Colors.grey.shade600,
                     ),
                   ),
                 ],
