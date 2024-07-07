@@ -19,4 +19,13 @@ class ProductFavoriteService {
 
     return products;
   }
+
+  Future<void> addOrRemoveFromFavorites(String productId) async {
+    final response = await HttClient.post(
+        Endpoints.productsFavorites, {'productId': productId});
+    final data = response[ResponseApi.data];
+    if (data == null) {
+      throw Exception(data['messages'][0]);
+    }
+  }
 }
