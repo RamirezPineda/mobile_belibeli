@@ -1,3 +1,4 @@
+export 'package:app_belibeli/models/shopping_cart.model.dart';
 export 'package:app_belibeli/models/product_favorite.model.dart';
 export 'package:app_belibeli/models/product.model.dart';
 export 'package:app_belibeli/models/discount.model.dart';
