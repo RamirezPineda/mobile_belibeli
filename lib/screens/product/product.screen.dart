@@ -7,6 +7,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:app_belibeli/models/models.dart';
 import 'package:app_belibeli/providers/providers.dart';
+import 'package:app_belibeli/widgets/widgets.dart';
+import 'package:app_belibeli/utils/utils.dart';
 
 class ProductScreen extends StatelessWidget {
   final String? id;
@@ -15,7 +17,9 @@ class ProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productFavoriteProvider = context.watch<ProductFavoriteProvider>();
-    final product = productFavoriteProvider.getProductById(id ?? '');
+    final categoryFavoriteProvider = context.watch<CategoryProvider>();
+
+    final product = categoryFavoriteProvider.getProductById(id ?? '');
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -89,10 +93,15 @@ class ProductScreen extends StatelessWidget {
                         height: 35,
                         width: 35,
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            productFavoriteProvider
+                                .addOrRemoveFromFavorites(product);
+                          },
                           icon: Icon(
                             CupertinoIcons.heart_fill,
-                            color: Colors.red.shade400,
+                            color: productFavoriteProvider.isFavorite(id ?? '')
+                                ? Colors.red.shade400
+                                : Colors.grey.shade200,
                             size: 22,
                           ),
                         ),
@@ -153,37 +162,7 @@ class ProductScreen extends StatelessWidget {
                     const SizedBox(height: 10),
 
                     // product price
-                    Row(
-                      children: [
-                        Text(
-                          '\$${product.price}',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          '\$${product.price}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.red.shade400,
-                            decoration: TextDecoration.lineThrough,
-                            decorationColor: Colors.red.shade400,
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          '25% off',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.green.shade400,
-                          ),
-                        ),
-                      ],
-                    ),
+                    _productPrice(product),
                     const SizedBox(height: 20),
 
                     // product details
@@ -196,7 +175,7 @@ class ProductScreen extends StatelessWidget {
                     ),
                     Text(product.description),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 15),
 
                     const Text('Package Dimensions  : ' +
                         '27.3 x 24.8 x 4.9 cm; 180 gr'),
@@ -210,7 +189,20 @@ class ProductScreen extends StatelessWidget {
 
                     // add to cart button
                     MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        final shoppingCartProvider =
+                            context.read<ShoppingCartProvider>();
+                        shoppingCartProvider.addToCart(product);
+                        showDialog(
+                          context: context,
+                          builder: (context) => const Message(
+                            title: 'Added',
+                            content: 'Product successfully added to bag!',
+                            color: Colors.green,
+                            icon: Icons.check_circle_sharp,
+                          ),
+                        );
+                      },
                       elevation: 0,
                       minWidth: double.infinity,
                       shape: RoundedRectangleBorder(
@@ -235,6 +227,52 @@ class ProductScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _productPrice(Product product) {
+    return Row(
+      children: [
+        Text(
+          '\$${TCalculate.calculatePrice(
+            price: product.price,
+            tax: product.tax,
+            discount: product.discount?.amount,
+          ).toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (product.discount?.amount != null)
+          Row(
+            children: [
+              const SizedBox(width: 10),
+              Text(
+                '\$${TCalculate.calculatePrice(
+                  price: product.price,
+                  tax: product.tax,
+                ).toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.red.shade400,
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: Colors.red.shade400,
+                ),
+              ),
+              const SizedBox(width: 5),
+              Text(
+                '${((product.discount?.amount ?? 0) * 100).toStringAsFixed(0)}% off',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.green.shade400,
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
