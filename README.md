@@ -11,6 +11,17 @@
 
 An e-commerce project to sell products online.
 
+## Screenshots
+
+<img src="./screenshots/presentation.png"/>
+
+<br />
+
+Login                      |   Home screen             |  Product Detail Screen    |  Cart Screen
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+<img src="./screenshots/login.jpg" width="400"/>|<img src="./screenshots/home.jpg" width="400"/>|<img src="./screenshots/product.jpg" width="400"/>|<img src="./screenshots/cart.jpg" width="400"/>
+
+
 ## Installation
 
 1. Clone the repository
