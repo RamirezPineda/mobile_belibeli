@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:app_belibeli/routes/app_router.dart';
+import 'package:app_belibeli/providers/providers.dart';
+import 'package:app_belibeli/utils/utils.dart';
+
 class ShoppingCartScreen extends StatelessWidget {
   const ShoppingCartScreen({super.key});
 
-  static final shoppingCartList = [
-    ['Shirt for golf', 150.00],
-    ['T-shirt nike golf', 250.00],
-    ['T-shirt nike golf', 250.00],
-    ['T-shirt nike golf', 250.00],
-    ['T-shirt nike golf', 250.00],
-    ['T-shirt nike golf', 250.00],
-    ['T-shirt nike golf', 250.00],
-    ['T-shirt nike golf', 250.00],
-    ['T-shirt nike golf', 250.00],
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final shoppingCartProvider = context.watch<ShoppingCartProvider>();
+    final shoppingCartList = shoppingCartProvider.shoppingCart;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping cart'),
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -27,35 +27,52 @@ class ShoppingCartScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: shoppingCartList.length,
               itemBuilder: (context, index) {
+                final shoppingCart = shoppingCartList[index];
                 return Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                   child: Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Image.network(
-                            'https://res.cloudinary.com/dwn7fonh6/image/upload/v1715909768/portfolio/ecommerce/categories/tshirt_hhtlsj.png',
-                            height: 60,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, url, error) =>
-                                const Icon(Icons.error),
+                      // image
+                      InkWell(
+                        onTap: () {
+                          context.push(
+                              '${Routes.product}/${shoppingCart.product.id}');
+                        },
+                        child: Hero(
+                          tag: shoppingCart.product.id,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    shoppingCart.product.productImage[0].url,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                height: 60,
+                                width: 60,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(width: 12),
+
+                      // name
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: 200,
+                            width: 190,
                             child: Text(
-                              shoppingCartList[index][0].toString(),
+                              shoppingCart.product.name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: const TextStyle(
@@ -65,7 +82,12 @@ class ShoppingCartScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            "\$${shoppingCartList[index][1]}",
+                            "\$${(TCalculate.calculatePrice(
+                                  price: shoppingCart.product.price,
+                                  tax: shoppingCart.product.tax,
+                                  discount:
+                                      shoppingCart.product.discount?.amount,
+                                ) * shoppingCart.quantity).toStringAsFixed(2)}",
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
@@ -76,7 +98,10 @@ class ShoppingCartScreen extends StatelessWidget {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              shoppingCartProvider
+                                  .reduceCartQuantity(shoppingCart.product.id);
+                            },
                             borderRadius: BorderRadius.circular(10.0),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -96,16 +121,19 @@ class ShoppingCartScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          const Text(
-                            '5',
-                            style: TextStyle(
+                          Text(
+                            shoppingCart.quantity.toString(),
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                             ),
                           ),
                           const SizedBox(width: 10),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              shoppingCartProvider
+                                  .addToCart(shoppingCart.product);
+                            },
                             borderRadius: BorderRadius.circular(10.0),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -140,10 +168,10 @@ class ShoppingCartScreen extends StatelessWidget {
             child: Column(
               children: [
                 // subtotal
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Subtotal",
                       style: TextStyle(
                         color: Colors.grey,
@@ -151,8 +179,8 @@ class ShoppingCartScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '\$${350.00}',
-                      style: TextStyle(
+                      '\$${shoppingCartProvider.total().toStringAsFixed(2)}',
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.w600,
                       ),
@@ -183,10 +211,10 @@ class ShoppingCartScreen extends StatelessWidget {
 
                 const SizedBox(height: 5),
                 // total
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Total:",
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
@@ -194,8 +222,8 @@ class ShoppingCartScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '\$${350.00}',
-                      style: TextStyle(
+                      '\$${shoppingCartProvider.total().toStringAsFixed(2)}',
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
                       ),
@@ -209,11 +237,11 @@ class ShoppingCartScreen extends StatelessWidget {
                   elevation: 0,
                   minWidth: double.infinity,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   color: Colors.grey.shade900,
                   child: const Padding(
-                    padding: EdgeInsets.all(14.0),
+                    padding: EdgeInsets.all(16.0),
                     child: Text(
                       'Checkout',
                       style: TextStyle(
