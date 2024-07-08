@@ -29,8 +29,8 @@ class FavoritesScreen extends StatelessWidget {
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 10 / 16,
               crossAxisCount: 2,
-              mainAxisSpacing: 6,
-              crossAxisSpacing: 6,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
             ),
             itemCount: products.length,
             itemBuilder: (_, index) => ProductCard(
