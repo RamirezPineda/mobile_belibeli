@@ -98,4 +98,23 @@ class Product {
             ? Category.fromMap(json["category"])
             : null,
       );
+
+  static Product productEmpty() => Product(
+        id: '',
+        brand: '',
+        creationDate: '',
+        department: Department.MEN,
+        description: '',
+        name: '',
+        price: 0,
+        sizes: [],
+        specification: '',
+        stock: 0,
+        tax: 0,
+        categoryId: '',
+        packageId: '',
+        productImage: [],
+        package: Package(id: '', high: 0, weight: 0, length: 0, width: 0),
+        category: Category(id: '', imageUrl: '', name: '', description: ''),
+      );
 }
