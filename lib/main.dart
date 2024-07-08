@@ -1,10 +1,11 @@
-import 'package:app_belibeli/services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:app_belibeli/routes/app_router.dart';
 import 'package:app_belibeli/providers/providers.dart';
+import 'package:app_belibeli/services/services.dart';
 import 'package:app_belibeli/utils/utils.dart';
 
 void main() async {
@@ -30,6 +31,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => ProductFavoriteProvider(productFavoriteService),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ShoppingCartProvider(),
         ),
       ],
       child: const MyApp(),
