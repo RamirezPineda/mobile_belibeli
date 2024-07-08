@@ -96,6 +96,10 @@ class LoginForm extends StatelessWidget {
                         final categoryProvider =
                             context.read<CategoryProvider>();
                         categoryProvider.getAllCategories();
+
+                        final productFavoriteProvider =
+                            context.read<ProductFavoriteProvider>();
+                        productFavoriteProvider.getAllProductsFavorite();
                         context.pushReplacement(Routes.root);
                       }
                     }).catchError((onError) {
@@ -119,7 +123,7 @@ class LoginForm extends StatelessWidget {
     return isLoading
         ? const Loading()
         : const Text(
-            'Log in',
+            'Login',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
