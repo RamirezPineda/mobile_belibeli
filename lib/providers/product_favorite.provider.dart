@@ -29,25 +29,32 @@ class ProductFavoriteProvider extends ChangeNotifier {
         productsFavorite.indexWhere((product) => product.id == id);
 
     if (productIndex == -1) {
-      return Product(
-        id: '',
-        brand: '',
-        creationDate: '',
-        department: Department.MEN,
-        description: '',
-        name: '',
-        price: 0,
-        sizes: [],
-        specification: '',
-        stock: 0,
-        tax: 0,
-        categoryId: '',
-        packageId: '',
-        productImage: [],
-        package: Package(id: '', high: 0, weight: 0, length: 0, width: 0),
-      );
+      return Product.productEmpty();
     }
 
     return productsFavorite[productIndex];
+  }
+
+  Future<void> addOrRemoveFromFavorites(Product product) async {
+    final index =
+        productsFavorite.indexWhere((favorite) => favorite.id == product.id);
+    if (index == -1) {
+      productsFavorite.add(product);
+      _productFavoriteService
+          .addOrRemoveFromFavorites(product.id)
+          .catchError((_) => productsFavorite.removeLast());
+    } else {
+      productsFavorite.removeAt(index);
+      _productFavoriteService
+          .addOrRemoveFromFavorites(product.id)
+          .catchError((_) => productsFavorite.insert(index, product));
+    }
+    notifyListeners();
+  }
+
+  bool isFavorite(String productId) {
+    return productsFavorite
+            .indexWhere((favorite) => favorite.id == productId) !=
+        -1;
   }
 }
