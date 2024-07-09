@@ -17,10 +17,15 @@ An e-commerce project to sell products online.
 
 <br />
 
-Login                      |   Home screen             |  Product Detail Screen    |  Cart Screen
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img src="./screenshots/login.jpg" width="400"/>|<img src="./screenshots/home.jpg" width="400"/>|<img src="./screenshots/product.jpg" width="400"/>|<img src="./screenshots/cart.jpg" width="400"/>
+Login                      |   Home screen             |  Product Detail Screen    
+:-------------------------:|:-------------------------:|:-------------------------:
+<img src="./screenshots/login.jpg" width="400"/>|<img src="./screenshots/home.jpg" width="400"/>|<img src="./screenshots/product.jpg" width="400"/>
 
+<br />
+
+Cart Screen                |   Checkout                
+:-------------------------:|:-------------------------:
+<img src="./screenshots/cart.jpg" width="400"/>|<img src="./screenshots/checkout.jpg" width="400"/>
 
 ## Installation
 
