@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 import 'package:app_belibeli/routes/app_router.dart';
+import 'package:app_belibeli/constants/constants.dart';
 import 'package:app_belibeli/providers/providers.dart';
 import 'package:app_belibeli/services/services.dart';
 import 'package:app_belibeli/utils/utils.dart';
@@ -19,6 +21,7 @@ void main() async {
   final categoryService = CategoryService();
   final productService = ProductService();
   final productFavoriteService = ProductFavoriteService();
+  final orderService = OrderService();
 
   runApp(
     MultiProvider(
@@ -34,6 +37,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => ShoppingCartProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => OrderProvider(orderService),
         ),
       ],
       child: const MyApp(),
