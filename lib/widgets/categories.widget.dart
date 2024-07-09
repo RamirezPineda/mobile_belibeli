@@ -1,3 +1,4 @@
+import 'package:app_belibeli/widgets/loading.wiget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:app_belibeli/models/models.dart';
@@ -35,8 +36,10 @@ class Categories extends StatelessWidget {
                       padding: const EdgeInsets.all(2),
                       child: CachedNetworkImage(
                         imageUrl: categories[index].imageUrl,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
+                        placeholder: (context, url) => Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Loading(color: Colors.grey.shade900),
+                        ),
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
                         fit: BoxFit.cover,

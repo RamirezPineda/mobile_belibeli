@@ -59,7 +59,15 @@ class ProductCard extends StatelessWidget {
                         padding: const EdgeInsets.all(7.0),
                         child: CachedNetworkImage(
                           imageUrl: product.productImage[0].url,
-                          placeholder: (context, url) => const Loading(),
+                          placeholder: (context, url) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 65,
+                              vertical: 50,
+                            ),
+                            child: Loading(
+                              color: Colors.grey.shade900,
+                            ),
+                          ),
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
                           fit: BoxFit.contain,
