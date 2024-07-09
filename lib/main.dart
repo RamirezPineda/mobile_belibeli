@@ -18,6 +18,9 @@ void main() async {
 
   await dotenv.load(fileName: '.env');
 
+  Stripe.publishableKey = Environment.stripePublicKey;
+  await Stripe.instance.applySettings();
+
   final categoryService = CategoryService();
   final productService = ProductService();
   final productFavoriteService = ProductFavoriteService();
