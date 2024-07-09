@@ -1,3 +1,4 @@
+export 'package:app_belibeli/services/order.service.dart';
 export 'package:app_belibeli/services/product_favorite.service.dart';
 export 'package:app_belibeli/services/product.service.dart';
 export 'package:app_belibeli/services/category.service.dart';
